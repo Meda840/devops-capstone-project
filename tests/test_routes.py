@@ -140,3 +140,21 @@ class TestAccountService(TestCase):
         self.assertEqual(data["email"], account.email)
         self.assertEqual(data["address"], account.address)
         self.assertEqual(data["phone_number"], account.phone_number)
+    
+    # TEST LIST ALL ACOUNTS
+    def test_list_all_accounts(self):
+        """It should list all Accounts"""
+        # create some accounts using the helper
+        accounts = self._create_accounts(3)  # create 3 accounts
+
+        # Call the GET /accounts endpoint
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.get_json()
+        self.assertEqual(len(data), 3)  # we should get 3 accounts
+
+        # Check that the first account in response matches what we created
+        self.assertEqual(data[0]["id"], accounts[0].id)
+        self.assertEqual(data[0]["name"], accounts[0].name)
+        self.assertEqual(data[0]["email"], accounts[0].email)
