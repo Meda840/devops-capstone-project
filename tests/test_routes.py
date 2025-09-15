@@ -158,3 +158,29 @@ class TestAccountService(TestCase):
         self.assertEqual(data[0]["id"], accounts[0].id)
         self.assertEqual(data[0]["name"], accounts[0].name)
         self.assertEqual(data[0]["email"], accounts[0].email)
+
+# TEST UPDATE ACCOUNT
+    def test_update_an_account(self):
+        """It should Update an existing Account"""
+        # First, create an account
+        account = self._create_accounts(1)[0]
+
+        # Prepare updated data
+        updated_data = {
+            "name": "Updated Name",
+            "email": "updated_email@example.com",
+            "address": account.address,
+            "phone_number": account.phone_number,
+            "date_joined": str(account.date_joined)
+        }
+
+        # Send PUT request to update the account
+        response = self.client.put(f"{BASE_URL}/{account.id}", json=updated_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Validate the response data
+        data = response.get_json()
+        self.assertEqual(data["id"], account.id)
+        self.assertEqual(data["name"], "Updated Name")
+        self.assertEqual(data["email"], "updated_email@example.com")
+
